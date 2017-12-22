@@ -50,15 +50,18 @@ provider:
       Resource: "arn:aws:s3:::crypto-guard-s3-bucket-json/*"
 
 functions:
-  # updates:
-  #   handler: src/handler.updates
-  #   events:
-  #     - stream:
-  #         type: dynamodb
-  #         arn:
-  #           Fn::GetAtt:
-  #             - cryptoGuardTable
-  #             - StreamArn
+  updates:
+    handler: src/handler.updates
+    events:
+      - stream:
+          type: dynamodb
+          batchSize: 100
+          startingPosition: LATEST
+          enabled: false
+          arn:
+            Fn::GetAtt:
+              - cryptoGuardTable
+              - StreamArn
   binance:
     handler: src/exchanges/index.binance
     environment:

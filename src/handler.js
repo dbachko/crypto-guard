@@ -8,8 +8,8 @@ export const updates = async (event, context, callback) => {
 
   const currencies = [];
   Records.forEach(({ eventName, dynamodb }) => {
-    // Check only new or modified records.
-    if (['INSERT', 'MODIFY'].includes(eventName)) {
+    // Check only new records.
+    if (['INSERT'].includes(eventName)) {
       currencies.push({
         currency: dynamodb.NewImage.currency.S,
         exchange: dynamodb.NewImage.exchange.S,
@@ -19,7 +19,7 @@ export const updates = async (event, context, callback) => {
 
   currencies.length && (await sendTextMessage(currencies));
 
-  console.log('We got a new crypto: ', currencies);
+  console.log('We\'ve got a new crypto: ', currencies);
 
   callback(null, generateResp(event, currencies));
 };
