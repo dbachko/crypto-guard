@@ -13,8 +13,9 @@ export default async (event, context, callback) => {
     const res = await fetch(API_URL);
     const { result } = await res.json();
     const currencies = new Set();
-    // @TODO doesn't work
-    Object.values(result).forEach(({ base }) => currencies.add(base));
+    Object.keys(result)
+      .map(key => result[key])
+      .forEach(({ base }) => currencies.add(base));
     const data = Array.from(currencies);
 
     const body = await insertIntoDatabase(exchange, data);

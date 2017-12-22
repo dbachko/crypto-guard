@@ -28,12 +28,13 @@ export default async (event, context, callback) => {
 
     const data = Array.from(currencies);
     const cachedCrypto = await readFromS3(cacheName);
-    const newCrypto = arrayDiff(cachedCrypto, data);
+    const newCrypto = arrayDiff(data, cachedCrypto);
+
+    // Save to database.
+    const body = await insertIntoDatabase(exchange, newCrypto);
 
     // Save new crypto to S3 bucket.
     await writeToS3(cacheName, data);
-
-    const body = await insertIntoDatabase(exchange, newCrypto);
 
     callback(null, generateResp(body));
   } catch (error) {

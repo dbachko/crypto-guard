@@ -131,15 +131,15 @@ functions:
       - http:
           path: hitbtc
           method: get
-  # kraken:
-  #   handler: src/exchanges/index.kraken
-  #   environment:
-  #     exchange: kraken
-  #   events:
-  #     # - schedule: ${self:custom.every10MinSchedule}
-  #     - http:
-  #         path: kraken
-  #         method: get
+  kraken:
+    handler: src/exchanges/index.kraken
+    environment:
+      exchange: kraken
+    events:
+      - schedule: ${self:custom.every10MinFrom3Schedule}
+      - http:
+          path: kraken
+          method: get
   livecoin:
     handler: src/exchanges/index.livecoin
     environment:
@@ -192,7 +192,7 @@ resources:
             KeyType: HASH
         ProvisionedThroughput:
           ReadCapacityUnits: 1
-          WriteCapacityUnits: 20
+          WriteCapacityUnits: 6
         StreamSpecification:
           StreamViewType: NEW_IMAGE
     CryptoGuardS3BucketJson:
