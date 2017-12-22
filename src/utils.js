@@ -101,7 +101,7 @@ const generateTextMessage = exchanges =>
   Object.keys(exchanges)
     .map((exchange) => {
       const coins = exchanges[exchange];
-      return `New crypto at ${exchange.toUpperCase()}: ${coins.join(', ')}.`;
+      return `New crypto at ${exchange.toUpperCase()}: ${coins.join(', ').toUpperCase()}.`;
     })
     .join(' ');
 
@@ -123,14 +123,17 @@ const aggregateCoins = (docs) => {
 };
 
 /**
- * Sends text message to specified phone number.
- * @return {Promise} Result of operation.
+ * Sends text message to specific subscriber.
+ * @param  {String} name  Subscriber's name.
+ * @param  {String} phone Subscriber's phone number.
+ * @param  {Array}  docs  Array of objects exchange/coin
+ * @return {Promise}      Promise for SMS message operation.
  */
-export const sendTextMessage = (docs) => {
+export const sendTextMessage = ({ name = 'Amigo', phone }, docs) => {
   const exchanges = aggregateCoins(docs);
   const textMsg = generateTextMessage(exchanges);
   const params = {
-    Message: `Dzmitry! ${textMsg}` /* required */,
+    Message: `${name}! ${textMsg}` /* required */,
     MessageAttributes: {
       'AWS.SNS.SMS.SenderID': {
         DataType: 'String' /* required */,
@@ -145,7 +148,7 @@ export const sendTextMessage = (docs) => {
         StringValue: 'Transactional',
       },
     },
-    PhoneNumber: '+13477700110',
+    PhoneNumber: phone,
   };
   return new Promise((resolve, reject) => {
     const sns = new SNS();
