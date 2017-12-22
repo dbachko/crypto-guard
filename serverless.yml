@@ -1,0 +1,201 @@
+service: crypto-guard
+
+plugins:
+  - serverless-webpack
+
+custom:
+  webpack: ./webpack.config.js
+  webpackIncludeModules: true # enable auto-packing of external modules
+  every10MinFrom1Schedule: cron(1/10 * * * ? *) # At every 10th minute from 1 through 59.
+  every10MinFrom2Schedule: cron(2/10 * * * ? *)
+  every10MinFrom3Schedule: cron(3/10 * * * ? *)
+  every10MinFrom4Schedule: cron(4/10 * * * ? *)
+  every10MinFrom5Schedule: cron(5/10 * * * ? *)
+  every10MinFrom6Schedule: cron(6/10 * * * ? *)
+  every10MinFrom7Schedule: cron(7/10 * * * ? *)
+  every10MinFrom8Schedule: cron(8/10 * * * ? *)
+  every10MinFrom9Schedule: cron(9/10 * * * ? *)
+  every10MinSchedule: rate(10 minutes)
+  every1MinSchedule: rate(1 minute)
+
+provider:
+  name: aws
+  runtime: nodejs6.10
+  memorySize: 128
+  timeout: 60 # The default is 6
+  iamRoleStatements:
+    - Effect: Allow
+      Action: # Gives permission to our DynamoDB table.
+        - dynamodb:BatchWriteItem
+        - dynamodb:DeleteItem
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:UpdateItem
+      Resource: "arn:aws:dynamodb:*:*:table/cryptoGuardTable"
+    - Effect: Allow
+      Action: # Gives permission to publish messages.
+        - SNS:Publish
+      Resource: "*"
+    - Effect: Allow
+      Action: # Gives full access to our s3 bucket.
+        - s3:GetObject
+        - s3:PutObject
+      Resource: "arn:aws:s3:::crypto-guard-s3-bucket-json"
+    - Effect: Allow
+      Action: # Gives full access to our s3 bucket.
+        - s3:GetObject
+        - s3:PutObject
+      Resource: "arn:aws:s3:::crypto-guard-s3-bucket-json/*"
+
+functions:
+  # updates:
+  #   handler: src/handler.updates
+  #   events:
+  #     - stream:
+  #         type: dynamodb
+  #         arn:
+  #           Fn::GetAtt:
+  #             - cryptoGuardTable
+  #             - StreamArn
+  binance:
+    handler: src/exchanges/index.binance
+    environment:
+      exchange: binance
+    events:
+      - schedule: ${self:custom.every10MinFrom1Schedule}
+      - http:
+          path: binance
+          method: get
+  bitfinex:
+    handler: src/exchanges/index.bitfinex
+    environment:
+      exchange: bitfinex
+    events:
+      - schedule: ${self:custom.every10MinFrom1Schedule}
+      - http:
+          path: bitfinex
+          method: get
+  bitstamp:
+    handler: src/exchanges/index.bitstamp
+    environment:
+      exchange: bitstamp
+    events:
+      - schedule: ${self:custom.every10MinFrom1Schedule}
+      - http:
+          path: bitstamp
+          method: get
+  bittrex:
+    handler: src/exchanges/index.bittrex
+    environment:
+      exchange: bittrex
+    events:
+      - schedule: ${self:custom.every10MinFrom4Schedule}
+      - http:
+          path: bittrex
+          method: get
+  cexio:
+    handler: src/exchanges/index.cexio
+    environment:
+      exchange: cexio
+    events:
+      - schedule: ${self:custom.every10MinFrom1Schedule}
+      - http:
+          path: cexio
+          method: get
+  coinrail:
+    handler: src/exchanges/index.coinrail
+    environment:
+      exchange: coinrail
+    events:
+      - schedule: ${self:custom.every10MinFrom1Schedule}
+      - http:
+          path: coinrail
+          method: get
+  gdax:
+    handler: src/exchanges/index.gdax
+    environment:
+      exchange: gdax
+    events:
+      - schedule: ${self:custom.every1MinSchedule}
+      - http:
+          path: gdax
+          method: get
+  hitbtc:
+    handler: src/exchanges/index.hitbtc
+    environment:
+      exchange: hitbtc
+    events:
+      - schedule: ${self:custom.every10MinFrom7Schedule}
+      - http:
+          path: hitbtc
+          method: get
+  # kraken:
+  #   handler: src/exchanges/index.kraken
+  #   environment:
+  #     exchange: kraken
+  #   events:
+  #     # - schedule: ${self:custom.every10MinSchedule}
+  #     - http:
+  #         path: kraken
+  #         method: get
+  livecoin:
+    handler: src/exchanges/index.livecoin
+    environment:
+      exchange: livecoin
+    events:
+      - schedule: ${self:custom.every10MinSchedule}
+      - http:
+          path: livecoin
+          method: get
+  poloniex:
+    handler: src/exchanges/index.poloniex
+    environment:
+      exchange: poloniex
+    events:
+      - schedule: ${self:custom.every10MinFrom8Schedule}
+      - http:
+          path: poloniex
+          method: get
+  quoine:
+    handler: src/exchanges/index.quoine
+    environment:
+      exchange: quoine
+    events:
+      - schedule: ${self:custom.every10MinFrom9Schedule}
+      - http:
+          path: quoine
+          method: get
+  yobit:
+    handler: src/exchanges/index.yobit
+    environment:
+      exchange: yobit
+    events:
+      - schedule: ${self:custom.every10MinFrom2Schedule}
+      - http:
+          path: yobit
+          method: get
+
+# CloudFormation resource templates can be added here.
+resources:
+  Resources:
+    cryptoGuardTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: cryptoGuardTable
+        AttributeDefinitions:
+          - AttributeName: _id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: _id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 20
+        StreamSpecification:
+          StreamViewType: NEW_IMAGE
+    CryptoGuardS3BucketJson:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: crypto-guard-s3-bucket-json
