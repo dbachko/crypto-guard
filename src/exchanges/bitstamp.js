@@ -4,7 +4,7 @@
  */
 import fetch from 'node-fetch';
 import { generateResp, insertIntoDatabase } from '../utils';
-import fiatCurrencyCodes from '../currency-codes';
+import fiatList from '../data/fiat-list';
 
 const API_URL = 'https://www.bitstamp.net/api/v2/trading-pairs-info/';
 
@@ -19,7 +19,7 @@ export default async (event, context, callback) => {
       // Pairs presented as `LTC/USD`.
       name.split('/').forEach((currency) => {
         // Filter fiat currencies.
-        fiatCurrencyCodes.has(currency) || currencies.add(currency);
+        fiatList.has(currency) || currencies.add(currency);
       });
     });
 

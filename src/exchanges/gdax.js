@@ -4,7 +4,7 @@
  */
 import fetch from 'node-fetch';
 import { generateResp, insertIntoDatabase } from '../utils';
-import fiatCurrencyCodes from '../currency-codes';
+import fiatList from '../data/fiat-list';
 
 const API_URL = 'https://api.gdax.com/currencies';
 
@@ -15,7 +15,7 @@ export default async (event, context, callback) => {
     const json = await res.json();
 
     const currencies = new Set();
-    json.forEach(({ id }) => fiatCurrencyCodes.has(id) || currencies.add(id));
+    json.forEach(({ id }) => fiatList.has(id) || currencies.add(id));
 
     const data = Array.from(currencies);
 

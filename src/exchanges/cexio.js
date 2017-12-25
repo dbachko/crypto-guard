@@ -4,7 +4,7 @@
  */
 import fetch from 'node-fetch';
 import { generateResp, insertIntoDatabase } from '../utils';
-import fiatCurrencyCodes from '../currency-codes';
+import fiatList from '../data/fiat-list';
 
 const API_URL = 'https://cex.io/api/currency_limits';
 
@@ -15,7 +15,7 @@ export default async (event, context, callback) => {
     const { data: { pairs } } = await res.json();
 
     const currencies = new Set();
-    pairs.forEach(({ symbol1 }) => fiatCurrencyCodes.has(symbol1) || currencies.add(symbol1));
+    pairs.forEach(({ symbol1 }) => fiatList.has(symbol1) || currencies.add(symbol1));
     const data = Array.from(currencies);
 
     const body = await insertIntoDatabase(exchange, data);

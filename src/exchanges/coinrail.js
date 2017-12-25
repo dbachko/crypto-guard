@@ -5,7 +5,7 @@
 import cheerio from 'cheerio';
 import fetch from 'node-fetch';
 import { generateResp, insertIntoDatabase } from '../utils';
-import fiatCurrencyCodes from '../currency-codes';
+import fiatList from '../data/fiat-list';
 
 const API_URL = 'https://coinrail.co.kr/intro'; // Home page
 
@@ -21,7 +21,7 @@ export default async (event, context, callback) => {
       .get();
 
     const currencies = new Set();
-    coins.forEach(coin => fiatCurrencyCodes.has(coin) || currencies.add(coin));
+    coins.forEach(coin => fiatList.has(coin) || currencies.add(coin));
 
     const data = Array.from(currencies);
 

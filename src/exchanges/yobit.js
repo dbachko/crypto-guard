@@ -4,7 +4,7 @@
  */
 import fetch from 'node-fetch';
 import { arrayDiff, generateResp, insertIntoDatabase, readFromS3, writeToS3 } from '../utils';
-import fiatCurrencyCodes from '../currency-codes';
+import fiatList from '../data/fiat-list';
 
 const API_URL = 'https://yobit.net/api/3/info';
 const cacheName = 'yobit.json';
@@ -22,7 +22,7 @@ export default async (event, context, callback) => {
       // pairs presented as `ltc_btc`.
       pair.split('_').forEach((currency) => {
         // Filter out fiat currencies.
-        fiatCurrencyCodes.has(currency) || currencies.add(currency);
+        fiatList.has(currency) || currencies.add(currency);
       });
     });
 
