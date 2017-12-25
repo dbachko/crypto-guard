@@ -8,3 +8,8 @@ Makes money while you sleep.
 2. Run `npm install`
 3. Deploy with `serverless deploy`
 4. Create `subscribers.json` using this structure: `[{"name": "", "phone": ""}, ...]` inside `crypto-guard-s3-bucket-json` S3 bucket.
+
+## Roadmap
+
+1. Create common wrapper for Trading bot.
+2. Implement Triangular arbitrage strategy.

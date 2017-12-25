@@ -12,6 +12,7 @@ export default async (event, context, callback) => {
     const { exchange } = process.env;
     const res = await fetch(API_URL);
     const { result } = await res.json();
+
     const currencies = new Set();
     Object.keys(result)
       .map(key => result[key])
