@@ -1,6 +1,6 @@
 import { DynamoDB, S3, SNS } from 'aws-sdk';
-import fiatCurrencyCodes from './currency-codes';
-import cryptoCurrencyCodes from './crypto-coin-list';
+import fiatList from './data/fiat-list';
+import cryptoList from './data/crypto-list';
 
 /**
  * Saves documents into database.
@@ -44,15 +44,15 @@ export const getCryptoCodes = (pair) => {
     const firstCode = pair.slice(0, splitPos);
     const secondCode = pair.slice(splitPos);
     // Check if sybol starts with fiat code.
-    if (fiatCurrencyCodes.has(firstCode)) {
+    if (fiatList.has(firstCode)) {
       // Check if sybol ends with crypto code.
-      if (cryptoCurrencyCodes.has(secondCode)) {
+      if (cryptoList.has(secondCode)) {
         return [secondCode];
       }
-    } else if (cryptoCurrencyCodes.has(firstCode)) {
-      if (cryptoCurrencyCodes.has(secondCode)) {
+    } else if (cryptoList.has(firstCode)) {
+      if (cryptoList.has(secondCode)) {
         return [firstCode, secondCode];
-      } else if (fiatCurrencyCodes.has(secondCode)) {
+      } else if (fiatList.has(secondCode)) {
         return [firstCode];
       }
     }

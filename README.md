@@ -13,3 +13,8 @@ Makes money while you sleep.
 
 1. Create common wrapper for Trading bot.
 2. Implement Triangular arbitrage strategy.
+
+## Crypto coin list update
+
+1. Fetch https://www.cryptocompare.com/api/data/coinlist/
+2. `JSON.stringify(Object.keys(json.Data).sort())`
