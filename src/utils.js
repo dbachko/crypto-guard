@@ -110,7 +110,7 @@ const generateTextMessage = exchanges =>
  * @param  {Array} docs  Array of exchange/coin pair objects.
  * @return {Object}      Exchange name as key, coins array as value.
  */
-const aggregateCoins = (docs) => {
+export const aggregateCoins = (docs) => {
   const exchanges = {};
   docs.forEach(({ currency, exchange }) => {
     if (exchanges[exchange]) {

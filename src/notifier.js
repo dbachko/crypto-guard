@@ -1,9 +1,9 @@
 import { generateResp, readFromS3, sendTextMessage } from './utils';
 
 /**
- * Handles updates to database.
+ * Sends text message about new crypto on exchanges.
  */
-export const updates = async (event, context, callback) => {
+export const index = async (event, context, callback) => {
   const { Records } = event;
 
   const currencies = [];
@@ -26,8 +26,4 @@ export const updates = async (event, context, callback) => {
   console.log('We\'ve got a new crypto: ', currencies);
 
   callback(null, generateResp(event, currencies));
-};
-
-export default {
-  updates,
 };

@@ -51,7 +51,7 @@ provider:
 
 functions:
   updates:
-    handler: src/handler.updates
+    handler: src/notifier.index
     events:
       - stream:
           type: dynamodb
