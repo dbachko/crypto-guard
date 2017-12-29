@@ -1,5 +1,6 @@
 import binance from './binance';
 import bitfinex from './bitfinex';
+import bithumb from './bithumb';
 import bitstamp from './bitstamp';
 import bittrex from './bittrex';
 import cexio from './cexio';
@@ -15,6 +16,7 @@ import yobit from './yobit';
 export {
   binance,
   bitfinex,
+  bithumb,
   bitstamp,
   bittrex,
   cexio,

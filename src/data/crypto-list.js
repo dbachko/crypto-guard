@@ -148,6 +148,7 @@ export default new Set([
   'BBT',
   'BBT*',
   'BCAP',
+  'BCC',
   'BCCOIN',
   'BCD',
   'BCD*',

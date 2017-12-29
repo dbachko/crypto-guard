@@ -80,6 +80,15 @@ functions:
       - http:
           path: bitfinex
           method: get
+  bithumb:
+    handler: src/exchanges/index.bithumb
+    environment:
+      exchange: bithumb
+    events:
+      - schedule: ${self:custom.every10MinFrom1Schedule}
+      - http:
+          path: bithumb
+          method: get
   bitstamp:
     handler: src/exchanges/index.bitstamp
     environment:

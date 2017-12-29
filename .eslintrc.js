@@ -28,5 +28,6 @@ module.exports = {
     'space-before-blocks': [ERROR, 'always'],
     'no-console': [OFF],
     'no-unused-expressions': [OFF],
+    'no-mixed-operators': [OFF],
   },
 };
