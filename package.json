@@ -39,6 +39,7 @@
   },
   "dependencies": {
     "aws-sdk": "^2.173.0",
+    "binance": "^1.1.2",
     "cheerio": "^1.0.0-rc.2",
     "node-fetch": "^1.7.3"
   }
