@@ -152,6 +152,15 @@ functions:
       - http:
           path: kraken
           method: get
+  kucoin:
+    handler: src/exchanges/index.kucoin
+    environment:
+      exchange: kucoin
+    events:
+      - schedule: ${self:custom.every10MinSchedule}
+      - http:
+          path: kucoin
+          method: get
   livecoin:
     handler: src/exchanges/index.livecoin
     environment:

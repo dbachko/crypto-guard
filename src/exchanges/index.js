@@ -8,6 +8,7 @@ import coinrail from './coinrail';
 import gdax from './gdax';
 import hitbtc from './hitbtc';
 import kraken from './kraken';
+import kucoin from './kucoin';
 import livecoin from './livecoin';
 import poloniex from './poloniex';
 import quoine from './quoine';
@@ -24,6 +25,7 @@ export {
   gdax,
   hitbtc,
   kraken,
+  kucoin,
   livecoin,
   poloniex,
   quoine,
