@@ -67,7 +67,7 @@ functions:
     environment:
       exchange: binance
     events:
-      - schedule: ${self:custom.every10MinFrom1Schedule}
+      - schedule: ${self:custom.every1MinSchedule}
       - http:
           path: binance
           method: get
@@ -76,7 +76,7 @@ functions:
     environment:
       exchange: bitfinex
     events:
-      - schedule: ${self:custom.every10MinFrom1Schedule}
+      - schedule: ${self:custom.every1MinSchedule}
       - http:
           path: bitfinex
           method: get
@@ -94,7 +94,7 @@ functions:
     environment:
       exchange: bitstamp
     events:
-      - schedule: ${self:custom.every10MinFrom1Schedule}
+      - schedule: ${self:custom.every1MinSchedule}
       - http:
           path: bitstamp
           method: get
@@ -103,7 +103,7 @@ functions:
     environment:
       exchange: bittrex
     events:
-      - schedule: ${self:custom.every10MinFrom4Schedule}
+      - schedule: ${self:custom.every1MinSchedule}
       - http:
           path: bittrex
           method: get
@@ -148,7 +148,7 @@ functions:
     environment:
       exchange: kraken
     events:
-      - schedule: ${self:custom.every10MinFrom3Schedule}
+      - schedule: ${self:custom.every1MinSchedule}
       - http:
           path: kraken
           method: get
@@ -157,7 +157,7 @@ functions:
     environment:
       exchange: kucoin
     events:
-      - schedule: ${self:custom.every10MinSchedule}
+      - schedule: ${self:custom.every1MinSchedule}
       - http:
           path: kucoin
           method: get
@@ -166,7 +166,7 @@ functions:
     environment:
       exchange: livecoin
     events:
-      - schedule: ${self:custom.every10MinSchedule}
+      - schedule: ${self:custom.every10MinFrom2Schedule}
       - http:
           path: livecoin
           method: get
@@ -175,7 +175,7 @@ functions:
     environment:
       exchange: poloniex
     events:
-      - schedule: ${self:custom.every10MinFrom8Schedule}
+      - schedule: ${self:custom.every1MinSchedule}
       - http:
           path: poloniex
           method: get
@@ -213,7 +213,7 @@ resources:
             KeyType: HASH
         ProvisionedThroughput:
           ReadCapacityUnits: 1
-          WriteCapacityUnits: 6
+          WriteCapacityUnits: 25
         StreamSpecification:
           StreamViewType: NEW_IMAGE
     CryptoGuardS3BucketJson:
