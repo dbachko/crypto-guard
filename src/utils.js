@@ -1,6 +1,44 @@
 import { DynamoDB, S3, SNS } from 'aws-sdk';
 import fiatList from './data/fiat-list';
-import cryptoList from './data/crypto-list';
+
+/**
+ * Writes file to S3 bucket.
+ * @param  {String} path File path.
+ * @param  {Object} json Json object to save.
+ * @return {Promise}     Result of operation.
+ */
+const writeToS3 = (path, json) =>
+  new Promise((resolve, reject) => {
+    const s3 = new S3();
+    const params = {
+      Bucket: 'crypto-guard-s3-bucket-json',
+      Key: path,
+      Body: JSON.stringify(json),
+      ContentType: 'application/json',
+    };
+    s3.putObject(params, (err, data) => {
+      err && reject(err.stack);
+      resolve(data);
+    });
+  });
+
+/**
+ * Reaads file from S3 bucket.
+ * @param  {String} path File path.
+ * @return {Object}      Json object.
+ */
+const readFromS3 = path =>
+  new Promise((resolve) => {
+    const s3 = new S3();
+    const params = {
+      Bucket: 'crypto-guard-s3-bucket-json',
+      Key: path,
+    };
+    s3.getObject(params, (err, data) => {
+      err && resolve([]);
+      resolve(data ? JSON.parse(data.Body.toString()) : []);
+    });
+  });
 
 /**
  * Saves documents into database.
@@ -32,12 +70,18 @@ const batchDatabasePutItems = (exchange, docs) =>
   });
 
 /**
+ * Fetches coinlist form S3.
+ * @return {Set} Crypto coin set.
+ */
+export const getCoinlist = async () => new Set(await readFromS3('coinlist.json'));
+
+/**
  * Extracts crypto currency codes from market pairs like: `btcusd`.
  * @TODO: doesn't recognize unknown coins.
  * @param  {String} pair      Market pair.
  * @return {Array}            Array of crypto currency codes.
  */
-export const getCryptoCodes = (pair) => {
+export const getCryptoCodes = (pair, cryptoList) => {
   const pairLength = pair.length;
   for (let idx = 0; idx < pairLength; idx += 1) {
     const splitPos = idx + 1;
@@ -170,41 +214,4 @@ export const arrayDiff = (a, b) => {
   return a.filter(x => !s.has(x));
 };
 
-/**
- * Writes file to S3 bucket.
- * @param  {String} path File path.
- * @param  {Object} json Json object to save.
- * @return {Promise}     Result of operation.
- */
-export const writeToS3 = (path, json) =>
-  new Promise((resolve, reject) => {
-    const s3 = new S3();
-    const params = {
-      Bucket: 'crypto-guard-s3-bucket-json',
-      Key: path,
-      Body: JSON.stringify(json),
-      ContentType: 'application/json',
-    };
-    s3.putObject(params, (err, data) => {
-      err && reject(err.stack);
-      resolve(data);
-    });
-  });
-
-/**
- * Reaads file from S3 bucket.
- * @param  {String} path File path.
- * @return {Object}      Json object.
- */
-export const readFromS3 = path =>
-  new Promise((resolve) => {
-    const s3 = new S3();
-    const params = {
-      Bucket: 'crypto-guard-s3-bucket-json',
-      Key: path,
-    };
-    s3.getObject(params, (err, data) => {
-      err && resolve([]);
-      resolve(data ? JSON.parse(data.Body.toString()) : []);
-    });
-  });
+export { readFromS3, writeToS3 };

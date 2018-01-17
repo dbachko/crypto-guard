@@ -3,7 +3,7 @@
  * Docs: https://www.binance.com/restapipub.html
  */
 import fetch from 'node-fetch';
-import { getCryptoCodes, generateResp, insertIntoDatabase } from '../utils';
+import { getCoinlist, getCryptoCodes, generateResp, insertIntoDatabase } from '../utils';
 
 const API_URL = 'https://api.binance.com/api/v1/ticker/allPrices';
 
@@ -13,9 +13,11 @@ export default async (event, context, callback) => {
     const res = await fetch(API_URL);
     const json = await res.json();
 
+    const coinlist = await getCoinlist();
+
     const currencies = new Set();
     json.forEach(({ symbol }) => {
-      getCryptoCodes(symbol).forEach(code => currencies.add(code));
+      getCryptoCodes(symbol, coinlist).forEach(code => currencies.add(code));
     });
 
     const data = Array.from(currencies);

@@ -3,7 +3,7 @@
  * Docs: https://docs.bitfinex.com/docs
  */
 import fetch from 'node-fetch';
-import { getCryptoCodes, generateResp, insertIntoDatabase } from '../utils';
+import { getCoinlist, getCryptoCodes, generateResp, insertIntoDatabase } from '../utils';
 
 const API_URL = 'https://api.bitfinex.com/v1/symbols';
 
@@ -13,9 +13,11 @@ export default async (event, context, callback) => {
     const res = await fetch(API_URL);
     const json = await res.json();
 
+    const coinlist = await getCoinlist();
+
     const currencies = new Set();
     json.forEach((pair) => {
-      getCryptoCodes(pair.toUpperCase()).forEach(code => currencies.add(code));
+      getCryptoCodes(pair.toUpperCase(), coinlist).forEach(code => currencies.add(code));
     });
 
     const data = Array.from(currencies);

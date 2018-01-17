@@ -62,6 +62,12 @@ functions:
             Fn::GetAtt:
               - cryptoGuardTable
               - StreamArn
+  coinlist:
+    handler: src/coinlist.index
+    events:
+      - http:
+          path: coinlist
+          method: get
   binance:
     handler: src/exchanges/index.binance
     environment:
