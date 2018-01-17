@@ -65,6 +65,7 @@ functions:
   coinlist:
     handler: src/coinlist.index
     events:
+      - schedule: ${self:custom.every10MinSchedule}
       - http:
           path: coinlist
           method: get
