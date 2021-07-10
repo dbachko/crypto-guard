@@ -12,7 +12,9 @@ export default async (event, context, callback) => {
   try {
     const { exchange } = process.env;
     const res = await fetch(API_URL);
-    const { data: { pairs } } = await res.json();
+    const {
+      data: { pairs },
+    } = await res.json();
 
     const currencies = new Set();
     pairs.forEach(({ symbol1 }) => fiatList.has(symbol1) || currencies.add(symbol1));

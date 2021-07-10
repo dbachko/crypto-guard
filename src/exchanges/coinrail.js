@@ -21,7 +21,7 @@ export default async (event, context, callback) => {
       .get();
 
     const currencies = new Set();
-    coins.forEach(coin => fiatList.has(coin) || currencies.add(coin));
+    coins.forEach((coin) => fiatList.has(coin) || currencies.add(coin));
 
     const data = Array.from(currencies);
 

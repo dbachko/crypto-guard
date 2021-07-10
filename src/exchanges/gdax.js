@@ -6,7 +6,7 @@ import fetch from 'node-fetch';
 import { generateResp, insertIntoDatabase } from '../utils';
 import fiatList from '../data/fiat-list';
 
-const API_URL = 'https://api.gdax.com/currencies';
+const API_URL = 'https://api.pro.coinbase.com/currencies';
 
 export default async (event, context, callback) => {
   try {

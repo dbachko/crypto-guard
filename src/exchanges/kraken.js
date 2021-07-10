@@ -15,7 +15,7 @@ export default async (event, context, callback) => {
 
     const currencies = new Set();
     Object.keys(result)
-      .map(key => result[key])
+      .map((key) => result[key])
       .forEach(({ base }) => currencies.add(base));
     const data = Array.from(currencies);
 

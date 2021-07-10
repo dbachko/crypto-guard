@@ -5,7 +5,7 @@
 import fetch from 'node-fetch';
 import { generateResp, readFromS3, writeToS3 } from './utils';
 
-const API_URL = 'https://www.cryptocompare.com/api/data/coinlist';
+const API_URL = 'https://min-api.cryptocompare.com/data/all/coinlist';
 
 /**
  * Updates coinlist with new coins.
@@ -19,8 +19,8 @@ export const index = async (event, context, callback) => {
     const json = await res.json();
     const coinlist = Object.keys(json.Data);
 
-    if (coinlist.some(el => !coinlistS3Set.has(el))) {
-      console.log('We\'ve got new coins!');
+    if (coinlist.some((el) => !coinlistS3Set.has(el))) {
+      console.log("We've got new coins!");
       writeToS3('coinlist.json', coinlist);
     }
 

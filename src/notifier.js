@@ -20,10 +20,10 @@ export const index = async (event, context, callback) => {
   // If new crypto was added -> notify our subscribers.
   if (currencies.length) {
     const subscribers = await readFromS3('subscribers.json');
-    await subscribers.forEach(async subscriber => sendTextMessage(subscriber, currencies));
+    await subscribers.forEach(async (subscriber) => sendTextMessage(subscriber, currencies));
   }
 
-  console.log('We\'ve got a new crypto: ', currencies);
+  console.log("We've got a new crypto: ", currencies);
 
   callback(null, generateResp(event, currencies));
 };

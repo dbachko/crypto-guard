@@ -4,8 +4,12 @@ plugins:
   - serverless-webpack
 
 custom:
-  webpack: ./webpack.config.js
-  webpackIncludeModules: true # enable auto-packing of external modules
+  webpack:
+    webpackConfig: 'webpack.config.js' # Name of webpack configuration file
+    includeModules:
+      forceExclude:
+        - aws-sdk
+    packager: 'npm' # Packager that will be used to package your external modules
   every10MinFrom1Schedule: cron(1/10 * * * ? *) # At every 10th minute from 1 through 59.
   every10MinFrom2Schedule: cron(2/10 * * * ? *)
   every10MinFrom3Schedule: cron(3/10 * * * ? *)
@@ -20,34 +24,39 @@ custom:
 
 provider:
   name: aws
-  runtime: nodejs6.10
+  runtime: nodejs14.x
   memorySize: 128
-  timeout: 60 # The default is 6
-  iamRoleStatements:
-    - Effect: Allow
-      Action: # Gives permission to our DynamoDB table.
-        - dynamodb:BatchWriteItem
-        - dynamodb:DeleteItem
-        - dynamodb:GetItem
-        - dynamodb:PutItem
-        - dynamodb:Query
-        - dynamodb:Scan
-        - dynamodb:UpdateItem
-      Resource: "arn:aws:dynamodb:*:*:table/cryptoGuardTable"
-    - Effect: Allow
-      Action: # Gives permission to publish messages.
-        - SNS:Publish
-      Resource: "*"
-    - Effect: Allow
-      Action: # Gives full access to our s3 bucket.
-        - s3:GetObject
-        - s3:PutObject
-      Resource: "arn:aws:s3:::crypto-guard-s3-bucket-json"
-    - Effect: Allow
-      Action: # Gives full access to our s3 bucket.
-        - s3:GetObject
-        - s3:PutObject
-      Resource: "arn:aws:s3:::crypto-guard-s3-bucket-json/*"
+  timeout: 30 # The default is 6
+  lambdaHashingVersion: 20201221
+  apiGateway:
+    shouldStartNameWithService: true
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action: # Gives permission to our DynamoDB table.
+            - dynamodb:BatchWriteItem
+            - dynamodb:DeleteItem
+            - dynamodb:GetItem
+            - dynamodb:PutItem
+            - dynamodb:Query
+            - dynamodb:Scan
+            - dynamodb:UpdateItem
+          Resource: 'arn:aws:dynamodb:*:*:table/cryptoGuardTable'
+        - Effect: Allow
+          Action: # Gives permission to publish messages.
+            - SNS:Publish
+          Resource: '*'
+        - Effect: Allow
+          Action: # Gives full access to our s3 bucket.
+            - s3:GetObject
+            - s3:PutObject
+          Resource: 'arn:aws:s3:::crypto-guard-s3-bucket-json'
+        - Effect: Allow
+          Action: # Gives full access to our s3 bucket.
+            - s3:GetObject
+            - s3:PutObject
+          Resource: 'arn:aws:s3:::crypto-guard-s3-bucket-json/*'
 
 functions:
   updates:
@@ -219,8 +228,8 @@ resources:
           - AttributeName: _id
             KeyType: HASH
         ProvisionedThroughput:
-          ReadCapacityUnits: 1
-          WriteCapacityUnits: 25
+          ReadCapacityUnits: 5
+          WriteCapacityUnits: 100
         StreamSpecification:
           StreamViewType: NEW_IMAGE
     CryptoGuardS3BucketJson:
