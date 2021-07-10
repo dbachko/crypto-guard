@@ -17,7 +17,7 @@ export default async (event, context, callback) => {
 
     const currencies = new Set();
     json.forEach(({ symbol }) => {
-      getCryptoCodes(symbol, coinlist).forEach(code => currencies.add(code));
+      getCryptoCodes(symbol, coinlist).forEach((code) => currencies.add(code));
     });
 
     const data = Array.from(currencies);

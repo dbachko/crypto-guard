@@ -17,7 +17,9 @@ const writeToS3 = (path, json) =>
       ContentType: 'application/json',
     };
     s3.putObject(params, (err, data) => {
-      err && reject(err.stack);
+      if (err) {
+        reject(err.stack);
+      }
       resolve(data);
     });
   });
@@ -27,7 +29,7 @@ const writeToS3 = (path, json) =>
  * @param  {String} path File path.
  * @return {Object}      Json object.
  */
-const readFromS3 = path =>
+const readFromS3 = (path) =>
   new Promise((resolve) => {
     const s3 = new S3();
     const params = {
@@ -35,7 +37,9 @@ const readFromS3 = path =>
       Key: path,
     };
     s3.getObject(params, (err, data) => {
-      err && resolve([]);
+      if (err) {
+        resolve([]);
+      }
       resolve(data ? JSON.parse(data.Body.toString()) : []);
     });
   });
@@ -51,7 +55,7 @@ const batchDatabasePutItems = (exchange, docs) =>
     const dynamodb = new DynamoDB();
     const dbParams = {
       RequestItems: {
-        cryptoGuardTable: docs.map(currency => ({
+        cryptoGuardTable: docs.map((currency) => ({
           PutRequest: {
             Item: {
               _id: { S: `${exchange}-${currency}` },
@@ -64,7 +68,9 @@ const batchDatabasePutItems = (exchange, docs) =>
     };
 
     dynamodb.batchWriteItem(dbParams, (err, body) => {
-      err && reject(err.stack);
+      if (err) {
+        reject(err.stack);
+      }
       resolve(body);
     });
   });
@@ -96,7 +102,8 @@ export const getCryptoCodes = (pair, cryptoList) => {
     } else if (cryptoList.has(firstCode)) {
       if (cryptoList.has(secondCode)) {
         return [firstCode, secondCode];
-      } else if (fiatList.has(secondCode)) {
+      }
+      if (fiatList.has(secondCode)) {
         return [firstCode];
       }
     }
@@ -141,7 +148,7 @@ export const insertIntoDatabase = async (exchange, docs) => {
  * @param  {Object} exchanges Object with exchange name as key, coins array as value.
  * @return {String}           Text message.
  */
-const generateTextMessage = exchanges =>
+const generateTextMessage = (exchanges) =>
   Object.keys(exchanges)
     .map((exchange) => {
       const coins = exchanges[exchange];
@@ -197,7 +204,9 @@ export const sendTextMessage = ({ name = 'Amigo', phone }, docs) => {
   return new Promise((resolve, reject) => {
     const sns = new SNS();
     sns.publish(params, (err, data) => {
-      err && reject(err.stack);
+      if (err) {
+        reject(err.stack);
+      }
       resolve(data);
     });
   });
@@ -211,7 +220,7 @@ export const sendTextMessage = ({ name = 'Amigo', phone }, docs) => {
  */
 export const arrayDiff = (a, b) => {
   const s = new Set(b);
-  return a.filter(x => !s.has(x));
+  return a.filter((x) => !s.has(x));
 };
 
 export { readFromS3, writeToS3 };

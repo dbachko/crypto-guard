@@ -13,7 +13,7 @@ export default async (event, context, callback) => {
     const res = await fetch(API_URL);
     const { data } = await res.json();
 
-    const coins = Object.keys(data).filter(name => name !== 'date');
+    const coins = Object.keys(data).filter((name) => name !== 'date');
 
     const body = await insertIntoDatabase(exchange, coins);
 
